@@ -58,7 +58,7 @@ data ChannelRequest a where
   -- | Remove a Reaction someone else added
   DeleteUserReaction      :: (ChannelId, MessageId) -> UserId -> T.Text -> ChannelRequest ()
   -- | List of users that reacted with this emoji
-  GetReactions            :: (ChannelId, MessageId) -> T.Text -> (Int, ReactionTiming) -> ChannelRequest ()
+  GetReactions            :: (ChannelId, MessageId) -> T.Text -> (Int, ReactionTiming) -> ChannelRequest [User]
   -- | Delete all reactions on a message
   DeleteAllReactions      :: (ChannelId, MessageId) -> ChannelRequest ()
   -- | Edits a message content.
