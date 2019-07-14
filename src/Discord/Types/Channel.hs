@@ -204,6 +204,7 @@ data Message = Message
                                            --   the message
   , messageAttachments  :: [Attachment]    -- ^ Any attached files
   , messageEmbeds       :: [Embed]         -- ^ Any embedded content
+  , messageReactions    :: [Reaction]      -- ^ Reactions to the message
   , messageNonce        :: Maybe Snowflake -- ^ Used for validating if a message
                                            --   was sent
   , messagePinned       :: Bool            -- ^ Whether this message is pinned
@@ -228,6 +229,7 @@ instance FromJSON Message where
             <*> o .:? "mention_roles" .!= []
             <*> o .:? "attachments" .!= []
             <*> o .:  "embeds"
+            <*> o .:? "reactions" .!= []
             <*> o .:? "nonce"
             <*> o .:? "pinned" .!= False
             <*> o .:? "guild_id" .!= Nothing
@@ -406,3 +408,31 @@ data SubEmbed
       String
       Bool
   deriving (Show, Eq, Ord)
+
+-- | An reaction to a message.
+data Reaction = Reaction
+  { reactionCount :: Integer    -- ^ Times this emoji has been used to react
+  , reactionIsMe  :: Bool       -- ^ Whether the current user reacted using this emoji
+  , reactionEmoji :: Emoji      -- ^ Emoji information
+  } deriving (Show, Eq, Ord)
+
+instance FromJSON Reaction where
+  parseJSON = withObject "Reaction" $ \o ->
+    Reaction <$> o .: "count"
+             <*> o .: "me"
+             <*> o .: "emoji"
+
+-- | Represents an emoticon (emoji)
+data Emoji = Emoji
+  { emojiId      :: Maybe EmojiId     -- ^ The emoji id
+  , emojiName    :: Text              -- ^ The emoji name
+  , emojiRoles   :: Maybe [RoleId]    -- ^ Roles the emoji is active for
+  , emojiManaged :: Maybe Bool        -- ^ Whether this emoji is managed
+  } deriving (Show, Eq, Ord)
+
+instance FromJSON Emoji where
+  parseJSON = withObject "Emoji" $ \o ->
+    Emoji <$> o .:  "id"
+          <*> o .:  "name"
+          <*> o .:? "roles"
+          <*> o .:? "managed"

@@ -16,7 +16,7 @@ import qualified Data.Text as T
 import Discord.Types.Prelude
 import Discord.Types.Channel
 import Discord.Types.Guild (Guild, GuildUnavailable, GuildInfo,
-                            GuildMember, Role, Emoji)
+                            GuildMember, Role)
 
 
 -- | Represents possible events sent by discord. Detailed information can be found at https://discordapp.com/developers/docs/topics/gateway.
@@ -57,10 +57,10 @@ data Event =
   deriving (Show, Eq)
 
 data ReactionInfo = ReactionInfo
-  { reactionUserId    :: UserId
-  , reactionChannelId :: ChannelId
-  , reactionMessageId :: MessageId
-  , reactionEmoji     :: Emoji
+  { reactionInfoUserId    :: UserId
+  , reactionInfoChannelId :: ChannelId
+  , reactionInfoMessageId :: MessageId
+  , reactionInfoEmoji     :: Emoji
   } deriving (Show, Eq, Ord)
 
 instance FromJSON ReactionInfo where
