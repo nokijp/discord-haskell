@@ -41,6 +41,22 @@ instance FromJSON User where
          <*> o .:? "email"
 
 
+-- | Represents an emoticon (emoji)
+data Emoji = Emoji
+  { emojiId      :: Maybe EmojiId     -- ^ The emoji id
+  , emojiName    :: Text              -- ^ The emoji name
+  , emojiRoles   :: Maybe [RoleId]    -- ^ Roles the emoji is active for
+  , emojiManaged :: Maybe Bool        -- ^ Whether this emoji is managed
+  } deriving (Show, Eq, Ord)
+
+instance FromJSON Emoji where
+  parseJSON = withObject "Emoji" $ \o ->
+    Emoji <$> o .:  "id"
+          <*> o .:  "name"
+          <*> o .:? "roles"
+          <*> o .:? "managed"
+
+
 data Webhook = Webhook
   { webhookId :: WebhookId
   , webhookToken :: Text
@@ -409,7 +425,7 @@ data SubEmbed
       Bool
   deriving (Show, Eq, Ord)
 
--- | An reaction to a message.
+-- | A reaction to a message.
 data Reaction = Reaction
   { reactionCount :: Integer    -- ^ Times this emoji has been used to react
   , reactionIsMe  :: Bool       -- ^ Whether the current user reacted using this emoji
@@ -421,18 +437,3 @@ instance FromJSON Reaction where
     Reaction <$> o .: "count"
              <*> o .: "me"
              <*> o .: "emoji"
-
--- | Represents an emoticon (emoji)
-data Emoji = Emoji
-  { emojiId      :: Maybe EmojiId     -- ^ The emoji id
-  , emojiName    :: Text              -- ^ The emoji name
-  , emojiRoles   :: Maybe [RoleId]    -- ^ Roles the emoji is active for
-  , emojiManaged :: Maybe Bool        -- ^ Whether this emoji is managed
-  } deriving (Show, Eq, Ord)
-
-instance FromJSON Emoji where
-  parseJSON = withObject "Emoji" $ \o ->
-    Emoji <$> o .:  "id"
-          <*> o .:  "name"
-          <*> o .:? "roles"
-          <*> o .:? "managed"
